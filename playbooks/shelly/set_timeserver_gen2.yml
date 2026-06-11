@@ -3,12 +3,16 @@
   hosts: shelly_gen2
   gather_facts: false
   vars:
-    ntp_server: "pool.ntp.org"
+    ntp_server: "192.168.178.4"
   tasks:
+    - name: Variablen anzeigen
+      debug:
+        msg: "Host: {{ ansible_host }} User: {{ ansible_user }}"
+
     - name: Timeserver konfigurieren
       ansible.builtin.uri:
         url: "http://{{ ansible_host }}/rpc/Sys.SetConfig"
-        url_username: admin
+        url_username: "{{ ansible_user }}"
         url_password: "{{ ansible_password }}"
         method: POST
         force_basic_auth: yes
@@ -17,8 +21,9 @@
           config:
             sntp:
               server: "{{ ntp_server }}"
+        timeout: 10
       register: result
 
     - name: Ergebnis anzeigen
       debug:
-        var: result.json
+        msg: "Ergebnis: {{ result.json }}"
