@@ -8,10 +8,11 @@
     - name: Timeserver konfigurieren
       ansible.builtin.uri:
         url: "http://{{ ansible_host }}/settings?sntp_server={{ ntp_server }}"
-        url_username: admin
+        url_username: "{{ ansible_user }}"
         url_password: "{{ ansible_password }}"
         method: GET
         force_basic_auth: yes
+        timeout: 10
       register: result
 
     - name: Ergebnis anzeigen
