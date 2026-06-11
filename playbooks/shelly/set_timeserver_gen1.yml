@@ -3,7 +3,7 @@
   hosts: shelly_gen1
   gather_facts: false
   vars:
-    ntp_server: "pool.ntp.org"
+    ntp_server: "192.168.178.4"
   tasks:
     - name: Variablen anzeigen
       debug:
@@ -22,4 +22,4 @@
 
     - name: Ergebnis anzeigen
       debug:
-        var: result
+        msg: "Timeserver gesetzt auf: {{ result.json.sntp.server }}"
