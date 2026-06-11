@@ -5,6 +5,10 @@
   vars:
     ntp_server: "pool.ntp.org"
   tasks:
+    - name: Variablen anzeigen
+      debug:
+        msg: "Host: {{ ansible_host }} User: {{ ansible_user }}"
+
     - name: Timeserver konfigurieren
       ansible.builtin.uri:
         url: "http://{{ ansible_host }}/settings?sntp_server={{ ntp_server }}"
@@ -14,7 +18,8 @@
         force_basic_auth: yes
         timeout: 10
       register: result
+      ignore_errors: yes
 
     - name: Ergebnis anzeigen
       debug:
-        var: result.json
+        var: result
