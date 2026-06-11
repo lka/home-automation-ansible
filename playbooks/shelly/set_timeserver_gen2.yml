@@ -1,0 +1,24 @@
+---
+- name: Shelly Gen2/3 - Timeserver setzen
+  hosts: shelly_gen2
+  gather_facts: false
+  vars:
+    ntp_server: "pool.ntp.org"
+  tasks:
+    - name: Timeserver konfigurieren
+      ansible.builtin.uri:
+        url: "http://{{ ansible_host }}/rpc/Sys.SetConfig"
+        url_username: admin
+        url_password: "{{ ansible_password }}"
+        method: POST
+        force_basic_auth: yes
+        body_format: json
+        body:
+          config:
+            sntp:
+              server: "{{ ntp_server }}"
+      register: result
+
+    - name: Ergebnis anzeigen
+      debug:
+        var: result.json
