@@ -10,24 +10,22 @@
         msg: "Host: {{ ansible_host }} User: {{ ansible_user }}"
 
     - name: Timeserver konfigurieren
-      ansible.builtin.uri:
-        url: "http://{{ ansible_host }}/rpc"
-        url_username: "{{ ansible_user }}"
-        url_password: "{{ ansible_password }}"
-        method: POST
-        force_basic_auth: no
-        http_agent: "ansible"
-        body_format: json
-        body:
-          id: 1
-          method: "Sys.SetConfig"
-          params:
-            config:
-              sntp:
-                server: "{{ ntp_server }}"
-        timeout: 10
+      ansible.builtin.script:
+        executable: python3
+        cmd: /dev/stdin
+        stdin: |
+          import requests
+          from requests.auth import HTTPDigestAuth
+          import json
+          r = requests.post(
+              'http://{{ ansible_host }}/rpc',
+              json={'id':1,'method':'Sys.SetConfig','params':{'config':{'sntp':{'server':'{{ ntp_server }}'}}}},
+              auth=HTTPDigestAuth('{{ ansible_user }}', '{{ ansible_password }}'),
+              timeout=10
+          )
+          print(r.text)
       register: result
 
     - name: Ergebnis anzeigen
       debug:
-        msg: "Ergebnis: {{ result.json }}"
+        msg: "Ergebnis: {{ result.stdout }}"
