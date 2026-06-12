@@ -14,6 +14,7 @@
         cmd: "files/shelly_gen2_sntp.py {{ ansible_host }} {{ ansible_user }} {{ ansible_password }} {{ ntp_server }}"
         executable: python3
       register: result
+      changed_when: "'\"changed\": true' in result.stdout"
 
     - name: Ergebnis anzeigen
       debug:
