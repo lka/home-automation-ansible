@@ -11,19 +11,8 @@
 
     - name: Timeserver konfigurieren
       ansible.builtin.script:
+        cmd: "playbooks/shelly/shelly_gen2_sntp.py {{ ansible_host }} {{ ansible_user }} {{ ansible_password }} {{ ntp_server }}"
         executable: python3
-        cmd: /dev/stdin
-        stdin: |
-          import requests
-          from requests.auth import HTTPDigestAuth
-          import json
-          r = requests.post(
-              'http://{{ ansible_host }}/rpc',
-              json={'id':1,'method':'Sys.SetConfig','params':{'config':{'sntp':{'server':'{{ ntp_server }}'}}}},
-              auth=HTTPDigestAuth('{{ ansible_user }}', '{{ ansible_password }}'),
-              timeout=10
-          )
-          print(r.text)
       register: result
 
     - name: Ergebnis anzeigen
