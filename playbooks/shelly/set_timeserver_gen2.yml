@@ -11,16 +11,20 @@
 
     - name: Timeserver konfigurieren
       ansible.builtin.uri:
-        url: "http://{{ ansible_host }}/rpc/Sntp.SetConfig"
+        url: "http://{{ ansible_host }}/rpc"
         url_username: "{{ ansible_user }}"
         url_password: "{{ ansible_password }}"
         method: POST
-        force_basic_auth: yes
+        force_basic_auth: no
+        http_agent: "ansible"
         body_format: json
         body:
-          config:
-            server: "{{ ntp_server }}"
-            enable: true
+          id: 1
+          method: "Sys.SetConfig"
+          params:
+            config:
+              sntp:
+                server: "{{ ntp_server }}"
         timeout: 10
       register: result
 
