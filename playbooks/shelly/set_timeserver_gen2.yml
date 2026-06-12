@@ -15,7 +15,14 @@
         executable: python3
       register: result
       changed_when: "'\"changed\": true' in result.stdout"
+      notify: Shelly neu starten
 
     - name: Ergebnis anzeigen
       debug:
         msg: "Ergebnis: {{ result.stdout }}"
+
+  handlers:
+    - name: Shelly neu starten
+      ansible.builtin.script:
+        cmd: "files/shelly_gen2_reboot.py {{ ansible_host }} {{ ansible_user }} {{ ansible_password }}"
+        executable: python3
