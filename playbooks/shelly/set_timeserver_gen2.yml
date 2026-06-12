@@ -11,7 +11,7 @@
 
     - name: Timeserver konfigurieren
       ansible.builtin.script:
-        cmd: "playbooks/shelly/shelly_gen2_sntp.py {{ ansible_host }} {{ ansible_user }} {{ ansible_password }} {{ ntp_server }}"
+        cmd: "files/shelly_gen2_sntp.py {{ ansible_host }} {{ ansible_user }} {{ ansible_password }} {{ ntp_server }}"
         executable: python3
       register: result
 
