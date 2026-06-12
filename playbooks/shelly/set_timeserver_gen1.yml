@@ -9,6 +9,16 @@
       debug:
         msg: "Host: {{ ansible_host }} User: {{ ansible_user }}"
 
+    - name: Aktuelle Konfiguration lesen
+      ansible.builtin.uri:
+        url: "http://{{ ansible_host }}/settings"
+        url_username: "{{ ansible_user }}"
+        url_password: "{{ ansible_password }}"
+        method: GET
+        force_basic_auth: yes
+        timeout: 10
+      register: current
+
     - name: Timeserver konfigurieren
       ansible.builtin.uri:
         url: "http://{{ ansible_host }}/settings?sntp_server={{ ntp_server }}"
@@ -18,8 +28,15 @@
         force_basic_auth: yes
         timeout: 10
       register: result
-      ignore_errors: yes
+      when: current.json.sntp.server != ntp_server
+      changed_when: true
+
+    - name: Ergebnis anzeigen
+      debug:
+        msg: "Timeserver bereits korrekt: {{ current.json.sntp.server }}"
+      when: current.json.sntp.server == ntp_server
 
     - name: Ergebnis anzeigen
       debug:
         msg: "Timeserver gesetzt auf: {{ result.json.sntp.server }}"
+      when: current.json.sntp.server != ntp_server
