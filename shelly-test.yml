@@ -30,3 +30,8 @@
         - shellyV2-gather
     when: shellygen == "3"
 
+  - name: play all neded gen 1 roles
+    include_role:
+      name: "{{ item }}"
+    loop: "{{ shellyroles }}"
+
