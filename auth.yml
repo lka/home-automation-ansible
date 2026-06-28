@@ -10,7 +10,7 @@
         myconfig:
           name: "{{ inventory_hostname_short }}"
           eco_mode: true
-          discoverable: false
+          discoverable: true
           location:
             tz: "{{ timezone }}"
             lat: "{{ lat }}"
