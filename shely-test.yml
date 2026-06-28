@@ -1,7 +1,0 @@
----
-- hosts: all
-  name: gather all information from shellies
-  gather_facts: false
-  connection: local
-  roles:
-    - shelly-get-gen
