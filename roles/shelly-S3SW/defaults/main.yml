@@ -1,0 +1,10 @@
+switchconfig:
+  shellyset:
+    channel: "Switch.SetConfig"
+    item: "config"
+    id: 0
+    data:
+      type: "switch"
+      initial_state: "off"
+      auto_on: false
+      auto_off: false
