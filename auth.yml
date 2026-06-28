@@ -25,7 +25,7 @@
         api:
           username: "{{ shellies.web.user }}"
           password: "{{ shellies.web.pass }}"
-          url: "http://{{ inventory_hostname }}/rpc/Sys.SetConfig?config={{myconfig|to_json|replace(' ', '') }}"
+          url: "http://{{ ansible_host }}/rpc/Sys.SetConfig?config={{myconfig|to_json|replace(' ', '') }}"
           requestMethod: "GET"
         digestRequestValues:
           nc: "00000001"
