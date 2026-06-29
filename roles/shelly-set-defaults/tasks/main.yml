@@ -3,7 +3,7 @@
 - name: get shelly infos
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/shelly"
+    url: "http://{{ ansible_host }}/shelly"
   delegate_to: localhost
   register: basicinfo
   retries: 30
@@ -17,7 +17,7 @@
 - name: set login password
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings/login?username={{ shellies.web.user }}&password={{ shellies.web.pass }}&enabled=1"
+    url: "http://{{ ansible_host }}/settings/login?username={{ shellies.web.user }}&password={{ shellies.web.pass }}&enabled=1"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
@@ -27,7 +27,7 @@
 - name: get shelly settings
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings"
+    url: "http://{{ ansible_host }}/settings"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
@@ -39,7 +39,7 @@
 - name: set mqtt enable
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings?mqtt_enable={{ shellies.mqtt.enabled }}"
+    url: "http://{{ ansible_host }}/settings?mqtt_enable={{ shellies.mqtt.enabled }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost      
@@ -47,34 +47,38 @@
 - name: set mqtt server
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings?mqtt_server={{ shellies.mqtt.server }}&mqtt_id={{ inventory_hostname_short }}"
+    url: "http://{{ ansible_host }}/settings?mqtt_server={{ shellies.mqtt.server }}&mqtt_id={{ inventory_hostname_short }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
+  when: shellies.mqtt.enabled == True
 
 - name: set mqtt user
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings?mqtt_user={{ shellies.mqtt.user }}"
+    url: "http://{{ ansible_host }}/settings?mqtt_user={{ shellies.mqtt.user }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
-  delegate_to: localhost      
+  delegate_to: localhost
+  when: shellies.mqtt.enabled == True
 
 - name: set mqtt password
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings?mqtt_pass={{ shellies.mqtt.pass }}"
+    url: "http://{{ ansible_host }}/settings?mqtt_pass={{ shellies.mqtt.pass }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
+  when: shellies.mqtt.enabled == True
 
 - name: set mqtt parameters
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings?mqtt_update_period={{ shellies.mqtt.update_period }}&mqtt_clean_session={{ shellies.mqtt.clean }}&mqtt_max_qos={{ shellies.mqtt.max_qos}}&mqtt_retain={{ shellies.mqtt.mqtt_retain }}"
+    url: "http://{{ ansible_host }}/settings?mqtt_update_period={{ shellies.mqtt.update_period }}&mqtt_clean_session={{ shellies.mqtt.clean }}&mqtt_max_qos={{ shellies.mqtt.max_qos}}&mqtt_retain={{ shellies.mqtt.mqtt_retain }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
+  when: shellies.mqtt.enabled == True
 
 - name: reboot the shelly
   include_role:
