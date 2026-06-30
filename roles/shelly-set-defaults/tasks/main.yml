@@ -186,7 +186,7 @@
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
-  when: settings.json.wifirecovery_reboot_enabled != (shellies.wifirecovery_reboot_enabled | bool)
+  when: (settings.json.wifirecovery_reboot_enabled | default(false)) != (shellies.wifirecovery_reboot_enabled | bool)
   register: wifirecovery_result
   changed_when: wifirecovery_result.status == 200
   failed_when: wifirecovery_result.status != 200
