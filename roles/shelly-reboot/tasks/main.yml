@@ -3,7 +3,7 @@
 - name: get shelly settings
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/reboot"
+    url: "http://{{ ansible_host }}/reboot"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
@@ -18,7 +18,7 @@
 - name: wait till shelly is back
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/shelly"
+    url: "http://{{ ansible_host }}/shelly"
   delegate_to: localhost
   register: response
   retries: 50

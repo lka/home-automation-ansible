@@ -164,19 +164,21 @@
   delegate_to: localhost
   when:  basicinfo.json.type != 'SHMOS-02' and basicinfo.json.type != 'SHMOS-01' and settings.json.ap_roaming.enabled == shellies.ap_roaming.enabled and settings.json.ap_roaming.threshold == shellies.ap_roaming.threshold
 
-- name: disable coiot
+- name: set coiot settings
   ansible.builtin.uri:
     method: get
-    url: "http://{{ ansible_host }}/settings?coiot_enable=false"
+    url: "http://{{ ansible_host }}/settings?coiot_enable={{ shellies.coiot.enabled | lower }}&coiot_peer={{ shellies.coiot.peer | urlencode }}&coiot_update_period={{ shellies.coiot.update_period }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
-  when: settings.json.coiot.enabled != false
+  when:
+    - settings.json.coiot is defined
+    - settings.json.coiot.enabled != (shellies.coiot.enabled | bool) or settings.json.coiot.peer != shellies.coiot.peer or settings.json.coiot.update_period != shellies.coiot.update_period
       
 - name: disable debug
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings?debug_enable=false"
+    url: "http://{{ ansible_host }}/settings?debug_enable=false"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
@@ -185,7 +187,7 @@
 - name: enable eco mode
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings?eco_mode_enabled={{ shellies.eco_mode }}"
+    url: "http://{{ ansible_host }}/settings?eco_mode_enabled={{ shellies.eco_mode }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
@@ -195,7 +197,7 @@
 - name: set wifi ssid1
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings/sta?ssid={{ shellies.wifi1.ssid }}&key={{ shellies.wifi1.key }}&ipv4_method={{ shellies.wifi1.ipv4_method }}&enabled={{ shellies.wifi1.enable }}"
+    url: "http://{{ ansible_host }}/settings/sta?ssid={{ shellies.wifi1.ssid }}&key={{ shellies.wifi1.key }}&ipv4_method={{ shellies.wifi1.ipv4_method }}&enabled={{ shellies.wifi1.enable }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
@@ -209,7 +211,7 @@
 - name: set wifi ssid2    
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings/sta1?ssid={{ shellies.wifi2.ssid }}&key={{ shellies.wifi2.key }}&ipv4_method={{ shellies.wifi2.ipv4_method }}&enabled={{ shellies.wifi2.enable }}"
+    url: "http://{{ ansible_host }}/settings/sta1?ssid={{ shellies.wifi2.ssid }}&key={{ shellies.wifi2.key }}&ipv4_method={{ shellies.wifi2.ipv4_method }}&enabled={{ shellies.wifi2.enable }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
@@ -223,7 +225,7 @@
 - name: get shelly settings
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings"
+    url: "http://{{ ansible_host }}/settings"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost

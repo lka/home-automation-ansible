@@ -10,7 +10,7 @@
   - name: set v1 roles
     ansible.builtin.set_fact:
       shellyroles: 
-        # - shelly-set-defaults
+        - shelly-set-defaults
         - shelly-gather
     when: shellygen == 1
 
