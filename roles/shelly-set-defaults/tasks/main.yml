@@ -45,7 +45,7 @@
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
-  when: settings.json.mqtt.enabled != (shellies.mqtt.enabled | bool)
+  when: (settings.json.mqtt.enabled | default(false)) != (shellies.mqtt.enabled | bool)
   register: mqtt_enable_result
   changed_when: mqtt_enable_result.status == 200
   notify: reboot shelly
@@ -57,7 +57,7 @@
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
-  when: shellies.mqtt.enabled == True and (settings.json.mqtt.server != shellies.mqtt.server or (settings.json.mqtt.id | default('')) != inventory_hostname_short)
+  when: shellies.mqtt.enabled == True and ((settings.json.mqtt.server | default('')) != shellies.mqtt.server or (settings.json.mqtt.id | default('')) != inventory_hostname_short)
   register: mqtt_server_result
   changed_when: mqtt_server_result.status == 200
   notify: reboot shelly
@@ -69,7 +69,7 @@
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
-  when: shellies.mqtt.enabled == True and (settings.json.mqtt.user | default('')) != shellies.mqtt.user
+  when: shellies.mqtt.enabled == True and ((settings.json.mqtt.user | default('')) != shellies.mqtt.user)
   register: mqtt_user_result
   changed_when: mqtt_user_result.status == 200
   notify: reboot shelly
@@ -81,7 +81,7 @@
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
-  when: shellies.mqtt.enabled == True and (settings.json.mqtt.pass | default('')) != shellies.mqtt.pass
+  when: shellies.mqtt.enabled == True and ((settings.json.mqtt.pass | default('')) != shellies.mqtt.pass)
   register: mqtt_pass_result
   changed_when: mqtt_pass_result.status == 200
   notify: reboot shelly
@@ -93,7 +93,7 @@
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
-  when: shellies.mqtt.enabled == True and (settings.json.mqtt.update_period != shellies.mqtt.update_period or settings.json.mqtt.clean_session != shellies.mqtt.clean or settings.json.mqtt.max_qos != shellies.mqtt.max_qos or settings.json.mqtt.retain != shellies.mqtt.mqtt_retain)
+  when: shellies.mqtt.enabled == True and ((settings.json.mqtt.update_period | default(0)) != shellies.mqtt.update_period or (settings.json.mqtt.clean_session | default(false)) != shellies.mqtt.clean or (settings.json.mqtt.max_qos | default(0)) != shellies.mqtt.max_qos or (settings.json.mqtt.retain | default(false)) != shellies.mqtt.mqtt_retain)
   register: mqtt_parameters_result
   changed_when: mqtt_parameters_result.status == 200
   failed_when: mqtt_parameters_result.status != 200
