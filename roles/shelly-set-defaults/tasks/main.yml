@@ -87,7 +87,7 @@
 - name: check mqtt
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings"
+    url: "http://{{ ansible_host }}/settings"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
@@ -96,7 +96,7 @@
 - name: set sntp server
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings?sntp_server={{ shellies.sntp.server }}"
+    url: "http://{{ ansible_host }}/settings?sntp_server={{ shellies.sntp.server }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
@@ -105,7 +105,7 @@
 - name: set timezone
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings?timezone={{ timezone }}&tzautodetect=false"
+    url: "http://{{ ansible_host }}/settings?timezone={{ timezone }}&tzautodetect=false"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
@@ -114,25 +114,25 @@
 - name: set geolocation
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings?lat={{ lat }}&lng={{ lng }}"
+    url: "http://{{ ansible_host }}/settings?lat={{ lat }}&lng={{ lng }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
   when:  settings.json.lat != lat or settings.json.lng != lng
       
-- name: disable cloud
+- name: set cloud enabled to {{ shellycloud }}
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings?cloud.enabled=false"
+    url: "http://{{ ansible_host }}/settings?cloud.enabled={{ shellycloud }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
-  when:  settings.json.cloud.enabled != false
+  when:  settings.json.cloud.enabled != {{ shellycloud }}
 
 - name: set name to {{ inventory_hostname_short }}
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings?name={{ inventory_hostname_short }}"
+    url: "http://{{ ansible_host }}/settings?name={{ inventory_hostname_short }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
@@ -141,7 +141,7 @@
 - name: set device discovery to {{ shellies.discoverable }}
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings?discoverable={{ shellies.discoverable }}"
+    url: "http://{{ ansible_host }}/settings?discoverable={{ shellies.discoverable }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
@@ -150,7 +150,7 @@
 - name: set wifirecovery reboot to {{ shellies.wifirecovery_reboot_enabled }}
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings?wifirecovery_reboot_enabled={{ shellies.wifirecovery_reboot_enabled }}"
+    url: "http://{{ ansible_host }}/settings?wifirecovery_reboot_enabled={{ shellies.wifirecovery_reboot_enabled }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
@@ -158,7 +158,7 @@
 - name: set wifi ap roaming enabled
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings?ap_roaming_enabled={{ shellies.ap_roaming.enabled }}&ap_roaming_threshold={{ shellies.ap_roaming.threshold }}"
+    url: "http://{{ ansible_host }}/settings?ap_roaming_enabled={{ shellies.ap_roaming.enabled }}&ap_roaming_threshold={{ shellies.ap_roaming.threshold }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
@@ -167,7 +167,7 @@
 - name: disable coiot
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/settings?coiot_enable=false"
+    url: "http://{{ ansible_host }}/settings?coiot_enable=false"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost

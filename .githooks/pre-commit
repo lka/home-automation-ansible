@@ -1,0 +1,17 @@
+#!/bin/sh
+# Prevent committing group_vars/all/secrets.yml unless it is ansible-vault encrypted.
+
+FILE="group_vars/all/secrets.yml"
+
+if git diff --cached --name-only --diff-filter=ACM -- "$FILE" >/dev/null 2>&1; then
+    if git show :"$FILE" 2>/dev/null | sed -n '1p' | grep -q '^\$ANSIBLE_VAULT;'; then
+        exit 0
+    fi
+
+    echo "ERROR: $FILE must be encrypted with ansible-vault before committing."
+    echo "Use: ansible-vault encrypt $FILE"
+    echo "If you want to keep the file untracked, remove it from the index: git rm --cached $FILE"
+    exit 1
+fi
+
+exit 0

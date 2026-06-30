@@ -2,4 +2,4 @@ shellygen: 1
 timezone: Europe/Berlin
 lat: 49.47582617
 lng: 9.82670992
-shellycloud: true
+shellycloud: True
