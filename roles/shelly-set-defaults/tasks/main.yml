@@ -189,7 +189,10 @@
   when: (settings.json.wifirecovery_reboot_enabled | default(false)) != (shellies.wifirecovery_reboot_enabled | bool)
   register: wifirecovery_result
   changed_when: wifirecovery_result.status == 200
-  failed_when: wifirecovery_result.status != 200
+  failed_when: false
+  retries: 5
+  delay: 3
+  until: wifirecovery_result is defined and wifirecovery_result.status == 200
   notify: reboot shelly
 
 - name: set wifi ap roaming enabled
