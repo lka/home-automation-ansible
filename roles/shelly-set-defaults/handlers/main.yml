@@ -1,0 +1,5 @@
+---
+
+- name: reboot shelly
+  include_role:
+    name: shelly-reboot
