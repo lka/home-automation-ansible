@@ -129,7 +129,7 @@
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
-  when:  settings.json.cloud.enabled != {{ shellycloud }}
+  when: settings.json.cloud.enabled != shellycloud
 
 - name: set name to {{ inventory_hostname_short }}
   ansible.builtin.uri:
