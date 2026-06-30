@@ -12,7 +12,9 @@
 
 - name: Show me    
   debug:
-    var: basicinfo.json.type,basicinfo.json.auth
+    msg:
+      - "type={{ basicinfo.json.type }}"
+      - "auth={{ basicinfo.json.auth }}"
 
 - name: set login password
   ansible.builtin.uri:
