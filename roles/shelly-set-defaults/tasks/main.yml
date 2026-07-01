@@ -164,7 +164,9 @@
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
-  when:  basicinfo.json.type != 'SHMOS-02' and basicinfo.json.type != 'SHMOS-01' and settings.json.ap_roaming.enabled == shellies.ap_roaming.enabled and settings.json.ap_roaming.threshold == shellies.ap_roaming.threshold
+  when:
+    - basicinfo.json.type != 'SHMOS-02' and basicinfo.json.type != 'SHMOS-01'
+    - settings.json.ap_roaming.enabled != shellies.ap_roaming.enabled or settings.json.ap_roaming.threshold != shellies.ap_roaming.threshold
 
 - name: set coiot settings
   ansible.builtin.uri:
