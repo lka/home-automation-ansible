@@ -160,7 +160,7 @@
 - name: set wifi ap roaming enabled
   ansible.builtin.uri:
     method: get
-    url: "http://{{ ansible_host }}/settings?ap_roaming_enable={{ shellies.ap_roaming.enabled }}&ap_roaming_threshold={{ shellies.ap_roaming.threshold }}"
+    url: "http://{{ ansible_host }}/settings?ap_roaming_enabled={{ shellies.ap_roaming.enabled | lower }}&ap_roaming_threshold={{ shellies.ap_roaming.threshold }}"
     url_password: "{{ shellies.web.pass }}"
     url_username: "{{ shellies.web.user }}"
   delegate_to: localhost
