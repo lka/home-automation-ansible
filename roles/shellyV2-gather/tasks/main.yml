@@ -3,7 +3,7 @@
 - name: get shelly basic infos
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/shelly"
+    url: "http://{{ ansible_host }}/shelly"
   delegate_to: localhost
   register: basicinfo
 
@@ -41,15 +41,15 @@
     
 - name: check if the host var file exists
   ansible.builtin.stat:
-    path: host_vars/{{ inventory_hostname }}.yml
+    path: host_vars/{{ inventory_hostname_short }}.yml
   register: st
 
 - name: write host file if needed
   ansible.builtin.copy:
-    dest: host_vars/{{ inventory_hostname }}.yml
+    dest: host_vars/{{ inventory_hostname_short }}.yml
     content: |
       ---
-      #   --->  host_vars/{{ inventory_hostname }}.yml
+      #   --->  host_vars/{{ inventory_hostname_short }}.yml
       shelly-type: "{{ shellymodel }}"
       shelly-mac: "{{ '{}{}:{}{}:{}{}:{}{}:{}{}:{}{}'.format(*shellybasic.mac)|lower }}"
       shelly-sw-version: "{{ shellybasic.fw_id }}"
@@ -57,9 +57,9 @@
       shellygen: "{{ shellybasic.gen }}"
   when: st.stat.exists != true
 
-- name: read whole config file for {{ inventory_hostname }}
+- name: read whole config file for {{ inventory_hostname_short }}
   ansible.builtin.slurp:
-    path: "host_vars/{{ inventory_hostname }}.yml"
+    path: "host_vars/{{ inventory_hostname_short }}.yml"
   delegate_to: localhost
   register: shellycfg
 
@@ -80,5 +80,5 @@
 
 - name: write host file
   ansible.builtin.copy:
-    dest: host_vars/{{ inventory_hostname }}.yml
+    dest: host_vars/{{ inventory_hostname_short }}.yml
     content: "{{ mydata | to_nice_yaml }}"

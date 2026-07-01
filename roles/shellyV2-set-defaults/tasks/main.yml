@@ -2,7 +2,7 @@
 - name: "Wait till shelly {{ inventory_hostname }} is reachable"
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/shelly"
+    url: "http://{{ ansible_host }}/shelly"
   delegate_to: localhost
   register: basicinfo
   retries: 50

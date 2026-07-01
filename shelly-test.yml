@@ -17,20 +17,20 @@
   - name: set V2 roles
     ansible.builtin.set_fact:
       shellyroles:
-        # - shellyV2-set-password
-        # - shellyV2-set-defaults
+        - shellyV2-set-password
+        - shellyV2-set-defaults
         - shellyV2-gather
     when: shellygen == "2"
 
   - name: set v3 roles
     ansible.builtin.set_fact:
       shellyroles:
-        # - shellyV2-set-password
-        # - shellyV2-set-defaults
+        - shellyV2-set-password
+        - shellyV2-set-defaults
         - shellyV2-gather
     when: shellygen == "3"
 
-  - name: play all neded gen 1 roles
+  - name: play all neded roles
     include_role:
       name: "{{ item }}"
     loop: "{{ shellyroles }}"

@@ -5,7 +5,7 @@
     api:
       username: "{{ shellies.web.user }}"
       password: "{{ shellies.web.pass }}"
-      url: "http://{{ inventory_hostname }}/rpc/Sys.GetConfig"
+      url: "http://{{ ansible_host }}/rpc/Sys.GetConfig"
       requestMethod: "GET"
     digestRequestValues:
       nc: "00000001"
@@ -14,7 +14,7 @@
 - name: get shelly basic infos
   ansible.builtin.uri:
     method: get
-    url: "http://{{ inventory_hostname }}/shelly"
+    url: "http://{{ ansible_host }}/shelly"
   delegate_to: localhost
   register: shellyinfo
 
@@ -32,6 +32,6 @@
 
 - name: Set password
   ansible.builtin.uri:
-    url: "http://{{ inventory_hostname }}/rpc/Shelly.SetAuth?user=\"{{shellies.web.user}}\"&realm=\"{{shellyinfo.json.id}}\"&ha1=\"{{ digestRequestValues.HA1 }}\""
+    url: "http://{{ ansible_host }}/rpc/Shelly.SetAuth?user=\"{{shellies.web.user}}\"&realm=\"{{shellyinfo.json.id}}\"&ha1=\"{{ digestRequestValues.HA1 }}\""
     method: "GET"  
   when: PreunauthorizedApiResponse.status == 200
